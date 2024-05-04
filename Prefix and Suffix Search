@@ -1,0 +1,32 @@
+class TrieNode:
+    def __init__(self):
+        self.children = [None]*27
+        self.index = 0
+class WordFilter:
+    def __init__(self, words: List[str]):
+        self.root = TrieNode()
+        for i, word in enumerate(words):
+            all_combinations = self.generate_all_suff_pref_combinations(word)
+            for suff_pref_word in all_combinations:
+                self.insert_trienode(suff_pref_word, i)
+    def generate_all_suff_pref_combinations(self, word):
+        all_combinations = []
+        for i, ele in enumerate(word):
+            all_combinations.append(word[i:] + "{" + word)
+        return all_combinations
+    def insert_trienode(self, word, index):
+        crnt = self.root
+        for letter in word:
+            if not crnt.children[ord(letter)-ord('a')]:
+                crnt.children[ord(letter)-ord('a')] = TrieNode()
+            crnt = crnt.children[ord(letter)-ord('a')]
+            crnt.index = index
+    def f(self, pref: str, suff: str) -> int:
+        crnt = self.root 
+        search_word = suff + "{" + pref
+        for letter in search_word:
+            if not crnt.children[ord(letter)-ord('a')]:
+                return -1
+            else:
+                crnt = crnt.children[ord(letter)-ord('a')]
+        return crnt.index        
